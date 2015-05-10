@@ -48,9 +48,7 @@
 }
 @property (weak) IBOutlet NSSlider *sldFocalLength;
 
-@property (weak) IBOutlet NSTextField *sldMinimum;
-@property (weak) IBOutlet NSTextField *sldMaximum;
-
+@property (weak) IBOutlet NSButton *ctrlEnableThresh;
 
 @property (weak) IBOutlet GPUImageView *videoView;
 

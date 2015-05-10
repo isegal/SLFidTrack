@@ -197,8 +197,7 @@ std::unordered_map<int, int> ID_MAP = {
     //[filter addTarget:blendFilter atTextureLocation:0];
     // [crosshairs addTarget:blendFilter atTextureLocation:1];
     
-    [filter addTarget:arTargetOverlay];
-    
+    [videoCamera addTarget:arTargetOverlay];
     [arTargetOverlay addTarget:self.videoView];
     
     // [filter addTarget: [[ARImageTarget alloc] init]];
@@ -250,6 +249,15 @@ std::unordered_map<int, int> ID_MAP = {
     
 }
 
+- (IBAction)enableThreshView:(id)sender {
+    if([sender state] == NSOnState) {
+        [arTargetOverlay removeTarget:self.videoView];
+        [filter addTarget: self.videoView];
+    } else if([sender state] == NSOffState) {
+        [filter removeTarget: self.videoView];
+        [arTargetOverlay addTarget:self.videoView];
+    }
+}
 
 - (IBAction)sldFocalChanged:(NSSlider *)sender {
     int sliderValue = [sender intValue];
@@ -257,12 +265,6 @@ std::unordered_map<int, int> ID_MAP = {
     focalLength = 640.0f + 1280.0f * scaling;
 }
 
-- (IBAction)sldMinimumChanged:(NSTextField *)sender{
-    
-}
 
-- (IBAction)sldMaximumChanged:(NSTextField *)sender {
-    
-}
 
 @end
