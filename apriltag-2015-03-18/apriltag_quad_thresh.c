@@ -1441,7 +1441,7 @@ zarray_t *apriltag_quad_thresh(apriltag_detector_t *td, image_u8_t *im)
 
     int w = im->width, h = im->height, s = im->stride;
 
-    image_u8_t *threshim = im; // threshold(td, im);
+    image_u8_t *threshim = threshold(td, im);
     assert(threshim->stride == s);
 
     image_u8_t *edgeim = image_u8_create(w, h);

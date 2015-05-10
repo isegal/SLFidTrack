@@ -82,20 +82,10 @@ std::unordered_map<int, int> ID_MAP = {
     
     arTargetOverlay = [[ARImageTarget alloc] init];
     //[arTargetOverlay forceProcessingAtSize:CGSizeMake(640, 480)];
-    
-    gfilter = [[GPUImageLowPassFilter alloc] init];
-    
-    crosshairs = [[GPUImageCrosshairGenerator alloc] init];
-    //[crosshairs forceProcessingAtSize:CGSizeMake(640.0, 480.0)];
-    [crosshairs setCrosshairWidth: 14.0];
-    
-    blendFilter = [[GPUImageAlphaBlendFilter alloc] init];
-    //[blendFilter forceProcessingAtSize:CGSizeMake(640.0, 480.0)];
-    
+
     [videoCamera addTarget:filter];
     
-    //gfilter.filterStrength = 0.1;
-    
+
     // Save video to desktop
     NSError *error = nil;
     
@@ -111,33 +101,6 @@ std::unordered_map<int, int> ID_MAP = {
         GLubyte *outputBytes = [rawDataOutput rawBytesForImage];
         NSInteger bytesPerRow = [rawDataOutput bytesPerRowInOutput];
         
-        //if(bytesPerRow == 0) {
-        //    return;
-        //}
-        
-        
-        
-        /*
-        int numMarkers = 0;
-        ARToolKitPlus::ARMarkerInfo *markerInfo;
-        std::vector<int> markerId = tracker->calc(outputBytes, &markerInfo, &numMarkers);
-        
-        if(numMarkers) {
-            printf("POS: %.2f, %.2f\n", markerInfo[0].pos[0], markerInfo[0].pos[1]);
-            //for (int i = 0; i < 16; i++)
-            //    printf("%.2f  %s", tracker->getModelViewMatrix()[i], (i % 4 == 3) ? "\n  " : "");
-        }
-        */
-        //NSLog(@"Bytes per row: %d", bytesPerRow);
-        /*
-        for (unsigned int yIndex = 0; yIndex < 3; yIndex++)
-        {
-            for (unsigned int xIndex = 0; xIndex < 256; xIndex++)
-            {
-                NSLog(@"Byte at (%d, %d): %d, %d, %d, %d", xIndex, yIndex, outputBytes[yIndex * bytesPerRow + xIndex * 4], outputBytes[yIndex * bytesPerRow + xIndex * 4 + 1], outputBytes[yIndex * bytesPerRow + xIndex * 4 + 2], outputBytes[yIndex * bytesPerRow + xIndex * 4 + 3]);
-            }
-        }
-        */
         
         
         image_u8_t tmp = { .width = 1280, .height = 720, .stride = 1280, .buf = outputBytes };
@@ -160,10 +123,7 @@ std::unordered_map<int, int> ID_MAP = {
             
             int marker_array_id = marker_id_idx->second;
             
-            /*
-            printf("detection %3d: id (%2dx%2d)-%-4d, hamming %d, goodness %8.3f, margin %8.3f\n",
-                       i, det->family->d*det->family->d, det->family->h, det->id, det->hamming, det->goodness, det->decision_margin);
-            */
+
             [arTargetOverlay addMarkerPointX: det->p[0][0] y:det->p[0][1]];
             [arTargetOverlay addMarkerPointX: det->p[1][0] y:det->p[1][1]];
             [arTargetOverlay addMarkerPointX: det->p[2][0] y:det->p[2][1]];
@@ -290,49 +250,6 @@ std::unordered_map<int, int> ID_MAP = {
     
 }
 
--(void)initARLibrary
-{
-    const int width = 640, height = 480, bpp = 1;
-    
-    // create a tracker that does:
-    //  - 6x6 sized marker images (required for binary markers)
-    //  - samples at a maximum of 6x6
-    //  - works with luminance (gray) images
-    //  - can load a maximum of 0 non-binary pattern
-    //  - can detect a maximum of 8 patterns in one imagege
-    tracker = new ARToolKitPlus::TrackerSingleMarker(width, height, 8, 6, 6, 6, 0);
-    tracker->setPixelFormat(ARToolKitPlus::PIXEL_FORMAT_RGBA);
-    
-    // load a camera file.
-    if (!tracker->init("no_distortion.cal", 1.0f, 1000.0f)) // load MATLAB file
-    {
-        printf("ERROR: init() failed\n");
-        return;
-    }
-    
-    // tracker->getCamera()->printSettings();
-    
-    // define size of the marker in OpenGL units
-    tracker->setPatternWidth(1.0);
-    
-    // the marker in the BCH test image has a thin border...
-    //tracker->setBorderWidth(0.125);
-    tracker->setBorderWidth(0.5);
-    
-    
-    // set a threshold. alternatively we could also activate automatic thresholding
-    tracker->setThreshold(150);
-    //tracker->activateAutoThreshold(true);
-    
-    // let's use lookup-table undistortion for high-speed
-    // note: LUT only works with images up to 1024x1024
-    tracker->setUndistortionMode(ARToolKitPlus::UNDIST_LUT);
-    
-    // switch to simple ID based markers
-    // use the tool in tools/IdPatGen to generate markers
-    tracker->setMarkerMode(ARToolKitPlus::MARKER_ID_SIMPLE);
-    
-}
 
 - (IBAction)sldFocalChanged:(NSSlider *)sender {
     int sliderValue = [sender intValue];

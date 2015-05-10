@@ -10,8 +10,6 @@
 
 #import <GPUImage/GPUImage.h>
 
-#include <ARToolKitPlus/TrackerSingleMarker.h>
-
 @interface ARImageTarget : GPUImageFilter
 {
 
@@ -23,7 +21,5 @@
 
 - (void)addMarkerPointX: (GLfloat) xcoord y: (GLfloat) ycoord;
 - (void) resetMarkerPoints;
-
-@property ARToolKitPlus::TrackerSingleMarker *tracker;
 
 @end

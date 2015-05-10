@@ -3,8 +3,6 @@
 
 #import "ARImageTarget.h"
 
-#include <ARToolKitPlus/TrackerSingleMarker.h>
-
 #include "apriltag.h"
 #include "common/image_u8.h"
 #include "common/homography.h"
@@ -30,7 +28,6 @@
     
     float focalLength;
     
-    GPUImageLowPassFilter *gfilter;
     GPUImageMovieWriter *movieWriter;
     
     
@@ -41,11 +38,7 @@
     int sockfd;
     struct sockaddr_in servaddr;
     
-    //
-    // ARToolkit
-    //
-    ARToolKitPlus::TrackerSingleMarker *tracker;
-    
+
     //
     // AprilTags
     //
