@@ -57,9 +57,15 @@ struct ufrec
 
 static inline unionfind_t *unionfind_create(uint32_t maxid)
 {
-    unionfind_t *uf = (unionfind_t*) calloc(1, sizeof(unionfind_t));
+    static unionfind_t *uf = 0;
+    if(!uf) {
+        uf = (unionfind_t*) calloc(1, sizeof(unionfind_t));
+    }
     uf->maxid = maxid;
-    uf->data = (struct ufrec*) malloc((maxid+1) * sizeof(struct ufrec));
+    if(!uf->data)
+        uf->data = (struct ufrec*) malloc((maxid+1) * sizeof(struct ufrec));
+    
+    
     for (int i = 0; i <= maxid; i++) {
         uf->data[i].size = 1;
         uf->data[i].parent = i;
@@ -69,8 +75,10 @@ static inline unionfind_t *unionfind_create(uint32_t maxid)
 
 static inline void unionfind_destroy(unionfind_t *uf)
 {
-    free(uf->data);
-    free(uf);
+    // TODO: Need to refactor so that it's properly cleaned.
+    
+    //free(uf->data);
+    //free(uf);
 }
 
 /*
