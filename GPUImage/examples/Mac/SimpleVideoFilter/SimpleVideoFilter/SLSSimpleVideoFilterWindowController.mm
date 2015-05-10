@@ -76,7 +76,7 @@ std::unordered_map<int, int> ID_MAP = {
     [videoCamera printSupportedPixelFormats];
     
     // Create filter and add it to target
-    filter = [[GPUImageGrayscaleFilter alloc] init];
+    filter = [[GPUImageLuminanceThresholdFilter alloc] init];
     //[filter forceProcessingAtSize:CGSizeMake(640.0, 480.0)];
     
     

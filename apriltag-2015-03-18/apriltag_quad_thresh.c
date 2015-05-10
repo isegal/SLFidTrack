@@ -1441,7 +1441,7 @@ zarray_t *apriltag_quad_thresh(apriltag_detector_t *td, image_u8_t *im)
 
     int w = im->width, h = im->height, s = im->stride;
 
-    image_u8_t *threshim = threshold(td, im);
+    image_u8_t *threshim = im; // threshold(td, im);
     assert(threshim->stride == s);
 
     image_u8_t *edgeim = image_u8_create(w, h);
@@ -1454,9 +1454,9 @@ zarray_t *apriltag_quad_thresh(apriltag_detector_t *td, image_u8_t *im)
             for (int x = 1; x+1 < w; x++) {
 
                 sumim->buf[y*s + x] =
-                    threshim->buf[y*s + x - 1] +
-                    threshim->buf[y*s + x + 0] +
-                    threshim->buf[y*s + x + 1];
+                    ((threshim->buf[y*s + x - 1])&1) +
+                    ((threshim->buf[y*s + x + 0])&1) +
+                    ((threshim->buf[y*s + x + 1])&1);
             }
         }
         timeprofile_stamp(td->tp, "sumim");
@@ -1542,7 +1542,7 @@ zarray_t *apriltag_quad_thresh(apriltag_detector_t *td, image_u8_t *im)
 //            image_u8_destroy(edgeim2);
         }
 
-        image_u8_destroy(threshim);
+        // image_u8_destroy(threshim);
         image_u8_destroy(sumim);
     }
 
