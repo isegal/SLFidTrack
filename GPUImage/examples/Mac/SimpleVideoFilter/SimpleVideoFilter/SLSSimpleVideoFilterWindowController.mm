@@ -17,7 +17,19 @@ std::unordered_map<int, int> ID_MAP = {
     {182, 2},
     {158, 3},
     {136, 4},
-    {113, 5}
+    {113, 5},
+    
+    {110, 6},
+    {134, 7},
+    {138, 8},
+    {159, 9},
+    {183, 10},
+    {185, 11},
+    {135, 12},
+    {184, 13},
+    {112, 14},
+    {114, 15}
+
 };
 
 @interface SLSSimpleVideoFilterWindowController ()
@@ -45,7 +57,7 @@ std::unordered_map<int, int> ID_MAP = {
 }
 
 - (void)windowDidLoad {
-    focalLength = 100.0f;
+    focalLength = 1080.0f;
     
     [super windowDidLoad];
     
@@ -160,7 +172,7 @@ std::unordered_map<int, int> ID_MAP = {
             //
             //matd_t* m = homography_to_pose(det->H, 250, 187, 0.055, 0.055);
             // *homography_to_pose(const matd_t *H, double fx, double fy, double cx, double cy);
-            matd_t* m = homography_to_pose(det->H, focalLength, focalLength, 0.5*focalLength, 0.5*focalLength);
+            matd_t* m = homography_to_pose(det->H, 1280, 1280, 0.5*1280, 0.5*1280);
             
             // printf("-----------\n");
             for(int c = 0; c < 16; ++c) {
@@ -262,7 +274,11 @@ std::unordered_map<int, int> ID_MAP = {
 - (IBAction)sldFocalChanged:(NSSlider *)sender {
     int sliderValue = [sender intValue];
     float scaling = (float) sliderValue / 1000.0f;
-    focalLength = 640.0f + 1280.0f * scaling;
+    
+    ((GPUImageLuminanceThresholdFilter*)filter).threshold = scaling;
+    
+    // focalLength = 640.0f + 1280.0f * scaling;
+    
 }
 
 
