@@ -43,10 +43,13 @@ std::unordered_map<int, int> ID_MAP = {
     
     bzero(&servaddr,sizeof(servaddr));
     servaddr.sin_family = AF_INET;
-    //servaddr.sin_addr.s_addr=inet_addr("127.0.0.1");
-    inet_aton("192.168.1.183", &servaddr.sin_addr);
+    servaddr.sin_addr.s_addr=inet_addr("127.0.0.1");
+    //inet_aton("192.168.1.183", &servaddr.sin_addr);
     
     servaddr.sin_port=htons(5123);
+    int broadcastEnable = 1;
+    
+    setsockopt(sockfd, SOL_SOCKET, SO_BROADCAST, &broadcastEnable, sizeof(broadcastEnable));
 }
 
 - (void)sendBufferSocket: (unsigned char*) buffer siz: (size_t) bSize
