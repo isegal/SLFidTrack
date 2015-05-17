@@ -28,7 +28,9 @@ std::unordered_map<int, int> ID_MAP = {
     {135, 12},
     {184, 13},
     {112, 14},
-    {114, 15}
+    {114, 15},
+    
+    {186, 0} // test marker
 
 };
 
@@ -43,7 +45,8 @@ std::unordered_map<int, int> ID_MAP = {
     
     bzero(&servaddr,sizeof(servaddr));
     servaddr.sin_family = AF_INET;
-    servaddr.sin_addr.s_addr=inet_addr("127.0.0.1");
+    //servaddr.sin_addr.s_addr=inet_addr("127.0.0.1");
+    servaddr.sin_addr.s_addr=inet_addr("192.168.1.255");
     //inet_aton("192.168.1.183", &servaddr.sin_addr);
     
     servaddr.sin_port=htons(5123);
