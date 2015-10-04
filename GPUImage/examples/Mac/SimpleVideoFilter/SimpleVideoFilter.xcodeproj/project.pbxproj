@@ -36,6 +36,7 @@
 		4F436BF11ABE628500EF28FB /* no_distortion.cal in Resources */ = {isa = PBXBuildFile; fileRef = 4F436BF01ABE628500EF28FB /* no_distortion.cal */; };
 		4F436BF71ABF894F00EF28FB /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F436BF61ABF894F00EF28FB /* CoreMedia.framework */; };
 		4F4633571ABE2D1800482B96 /* ARImageTarget.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4F4633561ABE2D1800482B96 /* ARImageTarget.mm */; };
+		4F6CB4911BC1CD5400DD3BB1 /* NetworkingWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F6CB48F1BC1CD5400DD3BB1 /* NetworkingWrapper.cpp */; settings = {ASSET_TAGS = (); }; };
 		79C26E221A5EDD1C0054857C /* SLSSimpleVideoFilterWindowController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 79C26E211A5EDD1C0054857C /* SLSSimpleVideoFilterWindowController.mm */; };
 		79C26E2E1A5F02B70054857C /* SLSSimpleVideoFilterWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79C26E2D1A5F02B70054857C /* SLSSimpleVideoFilterWindowController.xib */; };
 		79E8A5FB1A5ED6A700E6A226 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 79E8A5FA1A5ED6A700E6A226 /* AppDelegate.mm */; };
@@ -136,6 +137,8 @@
 		4F436BF61ABF894F00EF28FB /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/CoreMedia.framework; sourceTree = DEVELOPER_DIR; };
 		4F4633551ABE2D1800482B96 /* ARImageTarget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARImageTarget.h; sourceTree = "<group>"; };
 		4F4633561ABE2D1800482B96 /* ARImageTarget.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ARImageTarget.mm; sourceTree = "<group>"; };
+		4F6CB48F1BC1CD5400DD3BB1 /* NetworkingWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NetworkingWrapper.cpp; sourceTree = "<group>"; };
+		4F6CB4901BC1CD5400DD3BB1 /* NetworkingWrapper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = NetworkingWrapper.hpp; sourceTree = "<group>"; };
 		79C26E201A5EDD1C0054857C /* SLSSimpleVideoFilterWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLSSimpleVideoFilterWindowController.h; sourceTree = "<group>"; };
 		79C26E211A5EDD1C0054857C /* SLSSimpleVideoFilterWindowController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SLSSimpleVideoFilterWindowController.mm; sourceTree = "<group>"; };
 		79C26E2D1A5F02B70054857C /* SLSSimpleVideoFilterWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SLSSimpleVideoFilterWindowController.xib; sourceTree = "<group>"; };
@@ -273,6 +276,8 @@
 				79E8A5F71A5ED6A700E6A226 /* Supporting Files */,
 				4F4633551ABE2D1800482B96 /* ARImageTarget.h */,
 				4F4633561ABE2D1800482B96 /* ARImageTarget.mm */,
+				4F6CB48F1BC1CD5400DD3BB1 /* NetworkingWrapper.cpp */,
+				4F6CB4901BC1CD5400DD3BB1 /* NetworkingWrapper.hpp */,
 			);
 			path = SimpleVideoFilter;
 			sourceTree = "<group>";
@@ -456,6 +461,7 @@
 				46A0A8E31AFF0F7C00E7AA52 /* getopt.c in Sources */,
 				46A0A8F71AFF0F7C00E7AA52 /* unionfind.c in Sources */,
 				46A0A9071AFF0F7C00E7AA52 /* tag25h7.c in Sources */,
+				4F6CB4911BC1CD5400DD3BB1 /* NetworkingWrapper.cpp in Sources */,
 				46A0A8FB1AFF0F7C00E7AA52 /* zarray.c in Sources */,
 				46A0A90B1AFF0F7C00E7AA52 /* tag36artoolkit.c in Sources */,
 				46A0A8FF1AFF0F7C00E7AA52 /* zmaxheap.c in Sources */,
