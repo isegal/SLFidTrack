@@ -611,9 +611,10 @@
 					"../../../../apriltag-2015-03-18",
 					"/Users/carrie/git/SLFidTrack/apriltag-2015-03-18",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx10.9;
+				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "../../../../apriltag-2015-03-18";
 			};
 			name = Debug;
@@ -635,9 +636,10 @@
 					"../../../../apriltag-2015-03-18",
 					"/Users/carrie/git/SLFidTrack/apriltag-2015-03-18",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx10.9;
+				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "../../../../apriltag-2015-03-18";
 			};
 			name = Release;
