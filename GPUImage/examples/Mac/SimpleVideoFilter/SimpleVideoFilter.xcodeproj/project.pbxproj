@@ -37,6 +37,7 @@
 		4F436BF71ABF894F00EF28FB /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F436BF61ABF894F00EF28FB /* CoreMedia.framework */; };
 		4F4633571ABE2D1800482B96 /* ARImageTarget.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4F4633561ABE2D1800482B96 /* ARImageTarget.mm */; };
 		4F6CB4911BC1CD5400DD3BB1 /* NetworkingWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F6CB48F1BC1CD5400DD3BB1 /* NetworkingWrapper.cpp */; settings = {ASSET_TAGS = (); }; };
+		4F6CB4941BC1D2FC00DD3BB1 /* libRakNetLibStatic.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F6CB4931BC1D2FC00DD3BB1 /* libRakNetLibStatic.a */; settings = {ASSET_TAGS = (); }; };
 		79C26E221A5EDD1C0054857C /* SLSSimpleVideoFilterWindowController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 79C26E211A5EDD1C0054857C /* SLSSimpleVideoFilterWindowController.mm */; };
 		79C26E2E1A5F02B70054857C /* SLSSimpleVideoFilterWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79C26E2D1A5F02B70054857C /* SLSSimpleVideoFilterWindowController.xib */; };
 		79E8A5FB1A5ED6A700E6A226 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 79E8A5FA1A5ED6A700E6A226 /* AppDelegate.mm */; };
@@ -139,6 +140,7 @@
 		4F4633561ABE2D1800482B96 /* ARImageTarget.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ARImageTarget.mm; sourceTree = "<group>"; };
 		4F6CB48F1BC1CD5400DD3BB1 /* NetworkingWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NetworkingWrapper.cpp; sourceTree = "<group>"; };
 		4F6CB4901BC1CD5400DD3BB1 /* NetworkingWrapper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = NetworkingWrapper.hpp; sourceTree = "<group>"; };
+		4F6CB4931BC1D2FC00DD3BB1 /* libRakNetLibStatic.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libRakNetLibStatic.a; path = ../../../../../RakNet/Lib/RakNetLibStatic/libRakNetLibStatic.a; sourceTree = "<group>"; };
 		79C26E201A5EDD1C0054857C /* SLSSimpleVideoFilterWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLSSimpleVideoFilterWindowController.h; sourceTree = "<group>"; };
 		79C26E211A5EDD1C0054857C /* SLSSimpleVideoFilterWindowController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SLSSimpleVideoFilterWindowController.mm; sourceTree = "<group>"; };
 		79C26E2D1A5F02B70054857C /* SLSSimpleVideoFilterWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SLSSimpleVideoFilterWindowController.xib; sourceTree = "<group>"; };
@@ -162,6 +164,7 @@
 			files = (
 				4F436BF71ABF894F00EF28FB /* CoreMedia.framework in Frameworks */,
 				4F436BED1ABE5D7A00EF28FB /* AVFoundation.framework in Frameworks */,
+				4F6CB4941BC1D2FC00DD3BB1 /* libRakNetLibStatic.a in Frameworks */,
 				4F436BEB1ABE5D5100EF28FB /* GPUImage.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -312,6 +315,7 @@
 		79E8A61D1A5ED97400E6A226 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4F6CB4931BC1D2FC00DD3BB1 /* libRakNetLibStatic.a */,
 				4F436BF61ABF894F00EF28FB /* CoreMedia.framework */,
 				4F436BF41ABF891700EF28FB /* Foundation.framework */,
 				4F436BEC1ABE5D7A00EF28FB /* AVFoundation.framework */,
@@ -616,12 +620,13 @@
 					"$(inherited)",
 					"../../../../apriltag-2015-03-18",
 					"/Users/carrie/git/SLFidTrack/apriltag-2015-03-18",
+					../../../../RakNet/Lib/RakNetLibStatic,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
-				USER_HEADER_SEARCH_PATHS = "../../../../apriltag-2015-03-18";
+				USER_HEADER_SEARCH_PATHS = "../../../../apriltag-2015-03-18 ../../../../RakNet/include/Raknet";
 			};
 			name = Debug;
 		};
@@ -641,12 +646,13 @@
 					"$(inherited)",
 					"../../../../apriltag-2015-03-18",
 					"/Users/carrie/git/SLFidTrack/apriltag-2015-03-18",
+					../../../../RakNet/Lib/RakNetLibStatic,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
-				USER_HEADER_SEARCH_PATHS = "../../../../apriltag-2015-03-18";
+				USER_HEADER_SEARCH_PATHS = "../../../../apriltag-2015-03-18 ../../../../RakNet/include/Raknet";
 			};
 			name = Release;
 		};

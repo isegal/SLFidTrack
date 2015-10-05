@@ -12,6 +12,8 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
+class NetworkingWrapper;
+
 @interface SLSSimpleVideoFilterWindowController : NSWindowController
 {
     GPUImageAVCamera *videoCamera;
@@ -29,7 +31,7 @@
     float focalLength;
     
     GPUImageMovieWriter *movieWriter;
-    
+    NetworkingWrapper *mNetworkingWrapper;
     
     //
     // Socket comm

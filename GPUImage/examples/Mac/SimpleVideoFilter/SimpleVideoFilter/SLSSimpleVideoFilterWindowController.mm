@@ -10,6 +10,7 @@
 #include <stdio.h>
 
 #include <unordered_map>
+#include "NetworkingWrapper.hpp"
 
 std::unordered_map<int, int> ID_MAP = {
     {160, 0},
@@ -53,10 +54,14 @@ std::unordered_map<int, int> ID_MAP = {
     int broadcastEnable = 1;
     
     setsockopt(sockfd, SOL_SOCKET, SO_BROADCAST, &broadcastEnable, sizeof(broadcastEnable));
+    
+    mNetworkingWrapper = new NetworkingWrapper();
+    mNetworkingWrapper->setup();
 }
 
 - (void)sendBufferSocket: (unsigned char*) buffer siz: (size_t) bSize
 {
+    return;
     size_t res = sendto(sockfd,buffer,bSize,0,
            (struct sockaddr *)&servaddr,sizeof(servaddr));
     
@@ -199,7 +204,7 @@ std::unordered_map<int, int> ID_MAP = {
 
         apriltag_detections_destroy(detections);
         
-        
+        mNetworkingWrapper->update();
     }];
 
     
