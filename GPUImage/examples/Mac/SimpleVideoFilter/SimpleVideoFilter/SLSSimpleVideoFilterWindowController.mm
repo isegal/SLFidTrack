@@ -42,29 +42,9 @@ std::unordered_map<int, int> ID_MAP = {
 @implementation SLSSimpleVideoFilterWindowController
 
 - (void)initSocket {
-    sockfd=socket(AF_INET,SOCK_DGRAM,IPPROTO_UDP);
-    
-    bzero(&servaddr,sizeof(servaddr));
-    servaddr.sin_family = AF_INET;
-    //servaddr.sin_addr.s_addr=inet_addr("127.0.0.1");
-    servaddr.sin_addr.s_addr=inet_addr("192.168.1.255");
-    //inet_aton("192.168.1.183", &servaddr.sin_addr);
-    
-    servaddr.sin_port=htons(5123);
-    int broadcastEnable = 1;
-    
-    setsockopt(sockfd, SOL_SOCKET, SO_BROADCAST, &broadcastEnable, sizeof(broadcastEnable));
-    
+
     mNetworkingWrapper = new NetworkingWrapper();
     mNetworkingWrapper->setup();
-}
-
-- (void)sendBufferSocket: (unsigned char*) buffer siz: (size_t) bSize
-{
-    return;
-    size_t res = sendto(sockfd,buffer,bSize,0,
-           (struct sockaddr *)&servaddr,sizeof(servaddr));
-    
 }
 
 - (void)windowDidLoad {
@@ -185,23 +165,25 @@ std::unordered_map<int, int> ID_MAP = {
             // *homography_to_pose(const matd_t *H, double fx, double fy, double cx, double cy);
             matd_t* m = homography_to_pose(det->H, 1280, 1280, 0.5*1280, 0.5*1280);
             
+            FidMatrix mat;
+            
             // printf("-----------\n");
             for(int c = 0; c < 16; ++c) {
                 points[c] = m->data[c];
-                poses[marker_array_id][c] = m->data[c];
+                mat[c] = m->data[c];
+                
                 // printf("%f.3 ", points[c]);
                 
             }
+            
+            mNetworkingWrapper->updatePose(marker_array_id, mat);
+            
             printf("\n");
             matd_destroy(m);
             pidx++;
 
         }
         
-        if(pidx) {
-            [self sendBufferSocket: (unsigned char*)poses siz: 1024];
-        }
-
         apriltag_detections_destroy(detections);
         
         mNetworkingWrapper->update();
@@ -228,27 +210,6 @@ std::unordered_map<int, int> ID_MAP = {
     // Start capturing
     [videoCamera startCameraCapture];
     
-    
-    /*
-    double delayToStartRecording = 0.5;
-    dispatch_time_t startTime = dispatch_time(DISPATCH_TIME_NOW, delayToStartRecording * NSEC_PER_SEC);
-    dispatch_after(startTime, dispatch_get_main_queue(), ^(void){
-        NSLog(@"Start recording");
-        
-        videoCamera.audioEncodingTarget = movieWriter;
-        [movieWriter startRecording];
-        
-        double delayInSeconds = 10.0;
-        dispatch_time_t stopTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
-        dispatch_after(stopTime, dispatch_get_main_queue(), ^(void){
-            
-            [filter removeTarget:movieWriter];
-            videoCamera.audioEncodingTarget = nil;
-            [movieWriter finishRecording];
-            NSLog(@"Movie completed");
-
-        });
-    }); */
 
 }
 

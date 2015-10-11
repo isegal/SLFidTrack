@@ -10,7 +10,21 @@
 
 #include "MessageIdentifiers.h"
 #include "RakPeerInterface.h"
+#include "FiducialMarker.hpp"
+
 #include <chrono>
+#include <array>
+
+enum SLMessageIds {
+    ID_SERVER_TEXTMSG = ID_USER_PACKET_ENUM,
+    ID_PLAYER_INPUT_STATE,
+    ID_PLAYER_ACTION1,
+    ID_PLAYER_ACTION2,
+    ID_PLAYER_RAY_ACTION1,
+    ID_PLAYER_RAY_ACTION2,
+    ID_PLAYER_RAY_ACTION3,
+    ID_MARKER_POSE
+};
 
 inline unsigned char GetPacketIdentifier(const RakNet::Packet *p)
 {
@@ -26,6 +40,8 @@ inline unsigned char GetPacketIdentifier(const RakNet::Packet *p)
         return (unsigned char) p->data[0];
 }
 
+using Mat16 = std::array<float, 16>;
+
 class NetworkingWrapper {
     NetworkingWrapper(NetworkingWrapper&) =delete;
     NetworkingWrapper& operator=(NetworkingWrapper&) =delete;
@@ -36,23 +52,37 @@ public:
     void update();
     void shutdown();
     
+    void updatePose(int markerId, const FidMatrix& poseMatrix);
+    
 private:
     void initPeer();
-    void processPacket(const RakNet::Packet *packet);
+    void processPacket(RakNet::Packet *packet);
     void onUnconnectedPong(const RakNet::Packet *packet);
     void onConnectionAccepted(const RakNet::Packet *packet);
+    void onDisconnection();
+    void onFailedToConnect();
+    
+    void sendStateUpdate();
+    void sendMarkerPose(FiducialMarker& marker, int id);
     
     void periodicDiscoveryPing();
     
+    void closeClient();
+    
 private:
     RakNet::RakPeerInterface *mClient = nullptr;
-    int mServerPort = 8204;
+    static constexpr int serverPort = 8204;
+    static constexpr int numMarkers = 16;
+    std::array<FiducialMarker, numMarkers> mMarkers;
     
     bool bDiscovering = false;
+    bool bConnected = false;
     using clock = std::chrono::high_resolution_clock;
     using milliseconds = std::chrono::milliseconds;
     clock::time_point mLastPingSent = clock::time_point::min();
-    clock::duration mPingInterval = milliseconds(1000);
+    const clock::duration mPingInterval = milliseconds(1000);
+    
+    
 };
 
 #endif /* NetworkingWrapper_hpp */

@@ -7,6 +7,8 @@
 
 #include "NetworkingWrapper.hpp"
 
+#include "BitStream.h"
+
 #include <iostream>
 
 void NetworkingWrapper::setup()
@@ -33,14 +35,23 @@ void NetworkingWrapper::update()
     
     if(bDiscovering) {
         periodicDiscoveryPing();
+    } else if(bConnected) {
+        sendStateUpdate();
     }
     
-    auto packet = mClient->Receive();
-    if(!packet)
-        return;
-    
-    processPacket(packet);
-    mClient->DeallocatePacket(packet);
+    if(mClient) {
+        auto packet = mClient->Receive();
+        if(packet) {
+            processPacket(packet);
+        }
+    }
+
+}
+
+void NetworkingWrapper::updatePose(int markerId, const FidMatrix& poseMatrix)
+{
+    assert(markerId >= 0 && markerId < numMarkers);
+    mMarkers[markerId].updatePose(poseMatrix);
 }
 
 void NetworkingWrapper::periodicDiscoveryPing()
@@ -48,12 +59,12 @@ void NetworkingWrapper::periodicDiscoveryPing()
     if(clock::now() <= mLastPingSent + mPingInterval) {
         return;
     }
-    mClient->Ping("255.255.255.255", mServerPort, false);
+    mClient->Ping("255.255.255.255", serverPort, false);
     mLastPingSent = clock::now();
     
 }
 
-void NetworkingWrapper::processPacket(const RakNet::Packet *packet)
+void NetworkingWrapper::processPacket(RakNet::Packet *packet)
 {
     auto messageId = GetPacketIdentifier(packet);
     
@@ -68,13 +79,36 @@ void NetworkingWrapper::processPacket(const RakNet::Packet *packet)
             onConnectionAccepted(packet);
             break;
         }
+        case ID_CONNECTION_ATTEMPT_FAILED:
+        {
+            onFailedToConnect();
+            break;
+        }
+        
+        case ID_DISCONNECTION_NOTIFICATION:
+        {
+            mClient->DeallocatePacket(packet);
+            onDisconnection();
+            return; // no further work necessary
+        }
             
     }
+    mClient->DeallocatePacket(packet);
 }
 
 void NetworkingWrapper::onConnectionAccepted(const RakNet::Packet *packet)
 {
-    std::cout << "Connected\n";
+    bConnected = true;
+}
+
+void NetworkingWrapper::onDisconnection()
+{
+    closeClient();
+}
+
+void NetworkingWrapper::onFailedToConnect()
+{
+    closeClient();
 }
 
 void NetworkingWrapper::onUnconnectedPong(const RakNet::Packet *packet)
@@ -91,9 +125,50 @@ void NetworkingWrapper::onUnconnectedPong(const RakNet::Packet *packet)
     bDiscovering = false;
 }
 
-void NetworkingWrapper::shutdown()
+void NetworkingWrapper::sendStateUpdate()
+{
+    int idCounter = 0;
+    for(auto &marker : mMarkers) {
+        if(marker.isVisible()) {
+            sendMarkerPose(marker, idCounter);
+        }
+        ++idCounter;
+    }
+}
+
+void NetworkingWrapper::sendMarkerPose(FiducialMarker& marker, int id)
+{
+    FidMatrix pose;
+    /*
+     0  1   2   3
+     4  5   6   7
+     8  9   10  11
+     12 13  14  15
+     */
+    if(marker.readPose(pose)) {
+        RakNet::BitStream bsOut;
+        bsOut.Write((RakNet::MessageID)(ID_MARKER_POSE));
+        bsOut.WriteBitsFromIntegerRange(id, 0, numMarkers);
+        bsOut.WriteOrthMatrix(pose[0], pose[1], pose[2],
+                              pose[4], pose[5], pose[6],
+                              pose[8], pose[9], pose[10]);
+        bsOut.WriteVector(pose[3], pose[7], pose[11]);
+        
+        mClient->Send(&bsOut, HIGH_PRIORITY, UNRELIABLE_SEQUENCED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+        
+    }
+}
+
+void NetworkingWrapper::closeClient()
 {
     if(mClient) {
         RakNet::RakPeerInterface::DestroyInstance(mClient);
+        mClient = nullptr;
     }
+    bConnected = false;
+}
+
+void NetworkingWrapper::shutdown()
+{
+    closeClient();
 }

@@ -24,8 +24,6 @@ class NetworkingWrapper;
     
     GLfloat points[1024];
     
-    GLfloat poses[16][16];
-    
     int pidx;
     
     float focalLength;
