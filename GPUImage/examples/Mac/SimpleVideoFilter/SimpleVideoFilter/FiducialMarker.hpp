@@ -16,6 +16,10 @@ using FidMatrix = std::array<float, 16>;
 class FiducialMarker {
 public:
     
+    FiducialMarker() {
+        mLastSeen = clock::now() - mVisibilityLostDelay;
+    }
+    
     void updatePose(const FidMatrix& pose);
     bool readPose(FidMatrix& inPose);
     bool isVisible() { return((clock::now() - mLastSeen) < mVisibilityLostDelay); }

@@ -23,7 +23,8 @@ enum SLMessageIds {
     ID_PLAYER_RAY_ACTION1,
     ID_PLAYER_RAY_ACTION2,
     ID_PLAYER_RAY_ACTION3,
-    ID_MARKER_POSE
+    ID_MARKER_POSE,
+    ID_MARKER_VISIBILITIES
 };
 
 inline unsigned char GetPacketIdentifier(const RakNet::Packet *p)
@@ -64,6 +65,7 @@ private:
     
     void sendStateUpdate();
     void sendMarkerPose(FiducialMarker& marker, int id);
+    void sendMarkerVisibilities(int visMask);
     
     void periodicDiscoveryPing();
     

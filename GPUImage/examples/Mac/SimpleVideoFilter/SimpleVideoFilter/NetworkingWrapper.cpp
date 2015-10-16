@@ -128,12 +128,27 @@ void NetworkingWrapper::onUnconnectedPong(const RakNet::Packet *packet)
 void NetworkingWrapper::sendStateUpdate()
 {
     int idCounter = 0;
+    int visibilityMask = 0;
+    
     for(auto &marker : mMarkers) {
         if(marker.isVisible()) {
+            visibilityMask |= 1 << idCounter;
             sendMarkerPose(marker, idCounter);
         }
         ++idCounter;
     }
+    sendMarkerVisibilities(visibilityMask);
+}
+
+void NetworkingWrapper::sendMarkerVisibilities(int visMask)
+{
+    constexpr int bitRange = ((int)1 << numMarkers) - 1;
+    RakNet::BitStream bsOut;
+    bsOut.Write((RakNet::MessageID)(ID_MARKER_VISIBILITIES));
+    bsOut.WriteBitsFromIntegerRange(visMask, 0, bitRange);
+    std::cout << "MVis: " << visMask << std::endl;
+    mClient->Send(&bsOut, HIGH_PRIORITY, UNRELIABLE_SEQUENCED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+    
 }
 
 void NetworkingWrapper::sendMarkerPose(FiducialMarker& marker, int id)
