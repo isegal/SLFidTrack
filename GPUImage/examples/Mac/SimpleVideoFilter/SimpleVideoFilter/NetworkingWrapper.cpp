@@ -148,7 +148,7 @@ void NetworkingWrapper::sendStateUpdate()
     
     idCounter = 0;
     for(auto &marker : mMarkers) {
-        if(marker.isVisible()) {
+        if(visibilityMask & (1 << idCounter)) {
             sendMarkerPose(bsOut, marker, idCounter);
         }
         ++idCounter;
@@ -166,7 +166,7 @@ void NetworkingWrapper::sendMarkerVisibilities(RakNet::BitStream& bsOut, int vis
     // bsOut.Write((RakNet::MessageID)(ID_MARKER_VISIBILITIES));
     bsOut.WriteBitsFromIntegerRange(visMask, 0, bitRange);
     
-    std::cout << "visMask: " << visMask << "\n";
+    //std::cout << "visMask: " << visMask << "\n";
     
     // std::cout << "MVis: " << visMask << std::endl;
     // mClient->Send(&bsOut, HIGH_PRIORITY, UNRELIABLE_SEQUENCED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);

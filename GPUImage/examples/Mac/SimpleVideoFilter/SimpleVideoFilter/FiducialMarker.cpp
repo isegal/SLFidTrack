@@ -17,10 +17,10 @@ void FiducialMarker::updatePose(const FidMatrix& pose)
 
 bool FiducialMarker::readPose(FidMatrix& inPose)
 {
-    if(!mDirtyFlag)
-        return false;
+    //if(!mDirtyFlag)
+    //    return false;
     inPose = mPose;
-    mDirtyFlag = false;
+    //mDirtyFlag = false;
     return true;
 }
 
