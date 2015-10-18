@@ -64,8 +64,8 @@ private:
     void onFailedToConnect();
     
     void sendStateUpdate();
-    void sendMarkerPose(FiducialMarker& marker, int id);
-    void sendMarkerVisibilities(int visMask);
+    void sendMarkerPose(RakNet::BitStream& bsOut, FiducialMarker& marker, int id);
+    void sendMarkerVisibilities(RakNet::BitStream& bsOut, int visMask);
     
     void periodicDiscoveryPing();
     
@@ -81,8 +81,10 @@ private:
     bool bConnected = false;
     using clock = std::chrono::high_resolution_clock;
     using milliseconds = std::chrono::milliseconds;
-    clock::time_point mLastPingSent = clock::time_point::min();
+    clock::time_point mLastSent = clock::time_point::min();
     const clock::duration mPingInterval = milliseconds(1000);
+    
+    const clock::duration mSendInterval = milliseconds(100);
     
     
 };

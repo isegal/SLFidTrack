@@ -56,11 +56,11 @@ void NetworkingWrapper::updatePose(int markerId, const FidMatrix& poseMatrix)
 
 void NetworkingWrapper::periodicDiscoveryPing()
 {
-    if(clock::now() <= mLastPingSent + mPingInterval) {
+    if(clock::now() <= mLastSent + mPingInterval) {
         return;
     }
     mClient->Ping("255.255.255.255", serverPort, false);
-    mLastPingSent = clock::now();
+    mLastSent = clock::now();
     
 }
 
@@ -82,10 +82,11 @@ void NetworkingWrapper::processPacket(RakNet::Packet *packet)
         case ID_CONNECTION_ATTEMPT_FAILED:
         {
             onFailedToConnect();
-            break;
+            return;
         }
         
         case ID_DISCONNECTION_NOTIFICATION:
+        case ID_CONNECTION_LOST:
         {
             mClient->DeallocatePacket(packet);
             onDisconnection();
@@ -127,31 +128,52 @@ void NetworkingWrapper::onUnconnectedPong(const RakNet::Packet *packet)
 
 void NetworkingWrapper::sendStateUpdate()
 {
+    if(clock::now() <= mLastSent + mSendInterval) {
+        return;
+    }
+    
+    RakNet::BitStream bsOut;
+    bsOut.Write((RakNet::MessageID)(ID_MARKER_POSE));
+    
     int idCounter = 0;
     int visibilityMask = 0;
     
     for(auto &marker : mMarkers) {
         if(marker.isVisible()) {
             visibilityMask |= 1 << idCounter;
-            sendMarkerPose(marker, idCounter);
         }
         ++idCounter;
     }
-    sendMarkerVisibilities(visibilityMask);
+    sendMarkerVisibilities(bsOut, visibilityMask);
+    
+    idCounter = 0;
+    for(auto &marker : mMarkers) {
+        if(marker.isVisible()) {
+            sendMarkerPose(bsOut, marker, idCounter);
+        }
+        ++idCounter;
+    }
+    
+    mClient->Send(&bsOut, HIGH_PRIORITY, UNRELIABLE_SEQUENCED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+    
+    mLastSent = clock::now();
 }
 
-void NetworkingWrapper::sendMarkerVisibilities(int visMask)
+void NetworkingWrapper::sendMarkerVisibilities(RakNet::BitStream& bsOut, int visMask)
 {
     constexpr int bitRange = ((int)1 << numMarkers) - 1;
-    RakNet::BitStream bsOut;
-    bsOut.Write((RakNet::MessageID)(ID_MARKER_VISIBILITIES));
+    // RakNet::BitStream bsOut;
+    // bsOut.Write((RakNet::MessageID)(ID_MARKER_VISIBILITIES));
     bsOut.WriteBitsFromIntegerRange(visMask, 0, bitRange);
-    std::cout << "MVis: " << visMask << std::endl;
-    mClient->Send(&bsOut, HIGH_PRIORITY, UNRELIABLE_SEQUENCED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+    
+    std::cout << "visMask: " << visMask << "\n";
+    
+    // std::cout << "MVis: " << visMask << std::endl;
+    // mClient->Send(&bsOut, HIGH_PRIORITY, UNRELIABLE_SEQUENCED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
     
 }
 
-void NetworkingWrapper::sendMarkerPose(FiducialMarker& marker, int id)
+void NetworkingWrapper::sendMarkerPose(RakNet::BitStream& bsOut, FiducialMarker& marker, int id)
 {
     FidMatrix pose;
     /*
@@ -161,15 +183,13 @@ void NetworkingWrapper::sendMarkerPose(FiducialMarker& marker, int id)
      12 13  14  15
      */
     if(marker.readPose(pose)) {
-        RakNet::BitStream bsOut;
-        bsOut.Write((RakNet::MessageID)(ID_MARKER_POSE));
         bsOut.WriteBitsFromIntegerRange(id, 0, numMarkers);
         bsOut.WriteOrthMatrix(pose[0], pose[1], pose[2],
                               pose[4], pose[5], pose[6],
                               pose[8], pose[9], pose[10]);
         bsOut.WriteVector(pose[3], pose[7], pose[11]);
         
-        mClient->Send(&bsOut, HIGH_PRIORITY, UNRELIABLE_SEQUENCED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+        // mClient->Send(&bsOut, HIGH_PRIORITY, UNRELIABLE_SEQUENCED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
         
     }
 }

@@ -165,6 +165,11 @@ std::unordered_map<int, int> ID_MAP = {
             // *homography_to_pose(const matd_t *H, double fx, double fy, double cx, double cy);
             matd_t* m = homography_to_pose(det->H, 1280, 1280, 0.5*1280, 0.5*1280);
             
+            
+            //matd_t* m = homography_to_pose(det->H, 1280, 720, 1280/2.0, 720/2.0);
+            
+            //matd_t* m = homography_to_model_view(det->H, 0.836787939, 1.19175363, 0.0, 0.0, -1.0016681, -0.500166807);
+            
             FidMatrix mat;
             
             // printf("-----------\n");
